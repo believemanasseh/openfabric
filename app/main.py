@@ -1,11 +1,12 @@
 import base64
 import logging
+import os
 from typing import Dict
 
 from core.database import DatabaseManager
 from core.llm import query_llm
 from core.stub import Stub
-from core.utils import save_3d_model, save_image
+from core.utils import save_3d_model, save_image, upload_to_s3
 from ontology_dc8f06af066e4a7880a5938933236037.config import ConfigClass
 from ontology_dc8f06af066e4a7880a5938933236037.input import InputClass
 from ontology_dc8f06af066e4a7880a5938933236037.output import OutputClass
@@ -76,6 +77,13 @@ def execute(model: AppModel) -> None:
     image_to_3d_res = stub.call(app_ids[1], data={"input_image": img_base64})
     save_3d_model(app_ids[1], image_to_3d_res["generated_object"])
     logging.info("3D model saved to disk")
+
+    # Upload 3D model to S3
+    model_path = os.path.join("temp", "model.glb")
+    s3_url = upload_to_s3(model_path)
+    if not s3_url:
+        raise Exception("S3 upload failed")
+    logging.info(f"3D model uploaded to S3: {s3_url}")
 
     # Persist the generation in the database
     db_manager.save_generation(request.prompt, expanded_prompt)

@@ -72,7 +72,7 @@ def query_llm(prompt: str, similar_generations: Optional[List[Dict]]) -> str:
         logging.info(f"System prompt: {system_prompt}")
 
         response: ChatResponse = chat(
-            model="mistral:7b",
+            model="deepseek-r1:1.5b",
             messages=[
                 {
                     "role": "system",
@@ -84,6 +84,6 @@ def query_llm(prompt: str, similar_generations: Optional[List[Dict]]) -> str:
                 },
             ],
         )
-        return response["message"]["content"]
+        return response["message"]["content"].split("</think>")[1].strip()
     except ResponseError as e:
         raise Exception(f"LLM query failed: {e}")

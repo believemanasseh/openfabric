@@ -2,6 +2,7 @@ import plotly.graph_objects as go
 import requests
 import streamlit as st
 import trimesh
+from streamlit.components.v1 import html
 
 st.set_page_config(
     page_title="AI-powered Image and 3D Model Generation",
@@ -9,6 +10,18 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded",
 )
+
+
+def load_babylon_viewer(model_path: str) -> None:
+    """
+    Create a Babylon.js viewer component for the 3D model
+    """
+    # Read the HTML template
+    with open("./templates/babylon_viewer.html", "r") as file:
+        html_content = file.read()
+
+    # Use st.components.html to embed the viewer
+    html(html_content, height=300)
 
 
 def load_3d_model(model_path) -> go.Figure:
@@ -53,7 +66,7 @@ def load_3d_model(model_path) -> go.Figure:
                 y=y,
                 z=z,
                 mode="markers",
-                marker=dict(size=1, color=colors, opacity=0.8),
+                marker=dict(size=1),
             )
         ]
     )
@@ -101,9 +114,9 @@ def main(recursed=False) -> None:
 
             st.subheader("3D Model")
             if "current_model" in st.session_state:
-                fig = load_3d_model(st.session_state.current_model)
-                st.plotly_chart(fig, use_container_width=True)
-
+                # fig = load_3d_model(st.session_state.current_model)
+                # st.plotly_chart(fig, use_container_width=True)
+                load_babylon_viewer(st.session_state.current_model)
     if recursed:
         return
 

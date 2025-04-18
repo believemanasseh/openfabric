@@ -1,7 +1,10 @@
+import logging
 import os
 from io import BytesIO
 
+import boto3
 import requests
+from botocore.exceptions import ClientError
 from PIL import Image
 
 
@@ -63,3 +66,33 @@ def save_3d_model(app_id: str, webgl_path: str, save_dir: str = "temp") -> None:
             f.write(response.content)
     else:
         raise Exception(f"Failed to download 3D model resource: {response.status_code}")
+
+
+def upload_to_s3(file_path: str) -> str | None:
+    """Upload a file to an S3 bucket and return the public URL.
+
+    Args:
+        ctx (Context): The agent context object
+        file_path (str): File to upload
+        bucket (str): Bucket to upload to
+        object_name (str): S3 object name. If not specified, file_path is used
+
+    Returns:
+        str | None: Public URL of the uploaded file if successful, None otherwise
+    """
+    session = boto3.Session()
+    s3_client = session.client(service_name="s3")
+
+    try:
+        s3_client.upload_file(
+            file_path,
+            "forge-projects",
+            "projects/model.glb",
+            ExtraArgs={"ACL": "public-read"},
+        )
+        url = "https://forge-projects.s3.amazonaws.com/projects/model.glb"
+        logging.info(f"{url} uploaded to S3")
+        return url
+    except ClientError as e:
+        logging.info(f"Error uploading to S3: {e}")
+        return None
