@@ -93,3 +93,7 @@ Run the Streamlit client
 ```bash
 streamlit run client.py
 ```
+
+## Screenshot
+
+![AI Creative assistant](docs/assets/screenshot.jpg)
