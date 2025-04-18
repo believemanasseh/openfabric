@@ -27,7 +27,7 @@ def format_context(similar_generations: Optional[List[Dict]]) -> str:
         timestamp = datetime.fromisoformat(gen["timestamp"]).strftime("%Y-%m-%d %H:%M")
         context_lines.append(f"- {timestamp}: {gen['original_prompt']}")
         if gen.get("expanded_prompt"):
-            context_lines.append(f"Expanded as: {gen['expanded_prompt']}")
+            context_lines.append(f"  Expanded as: {gen['expanded_prompt']}")
 
     return "\n".join(context_lines)
 
