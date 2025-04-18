@@ -30,7 +30,7 @@ class Remote:
         self.client: Optional[Proxy] = None
 
     # ----------------------------------------------------------------------
-    def connect(self) -> 'Remote':
+    def connect(self) -> "Remote":
         """
         Establishes a connection with the proxy by instantiating the Proxy client.
 
