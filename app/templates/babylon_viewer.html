@@ -26,8 +26,12 @@
             const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), scene);
             
             // Load the GLB model
-            await BABYLON.SceneLoader.ImportMeshAsync("", "https://forge-projects.s3.amazonaws.com/projects/", "model.glb", scene);
+            const result = await BABYLON.SceneLoader.ImportMeshAsync("", "https://forge-projects.s3.amazonaws.com/projects/", "model.glb", scene);
             
+            // Scale up the model 
+            const modelScale = 5.0;
+            result.meshes[0].scaling = new BABYLON.Vector3(modelScale, modelScale, modelScale);
+
             return scene;
         }
 

@@ -1,7 +1,7 @@
-import plotly.graph_objects as go
+import time
+
 import requests
 import streamlit as st
-import trimesh
 from streamlit.components.v1 import html
 
 st.set_page_config(
@@ -15,6 +15,9 @@ st.set_page_config(
 def load_babylon_viewer(model_path: str) -> None:
     """
     Create a Babylon.js viewer component for the 3D model
+
+    Args:
+        model_path (str): Path to the GLB file to be loaded.
     """
     # Read the HTML template
     with open("./templates/babylon_viewer.html", "r") as file:
@@ -22,62 +25,6 @@ def load_babylon_viewer(model_path: str) -> None:
 
     # Use st.components.html to embed the viewer
     html(html_content, height=300)
-
-
-def load_3d_model(model_path) -> go.Figure:
-    """
-    Load and create a 3D model visualization from a GLB file.
-
-    Args:
-        model_path (str): Path to the GLB file to be loaded.
-
-    Returns:
-        plotly.graph_objects.Figure: A 3D scatter plot figure of the model's vertices.
-    """
-    # Load the GLB file
-    scene = trimesh.load(model_path)
-
-    # Extract vertices from the mesh
-    if isinstance(scene, trimesh.Scene):
-        # If it's a scene, get the first mesh
-        mesh = next(iter(scene.geometry.values()))
-    else:
-        mesh = scene
-
-    # Get vertices
-    vertices = mesh.vertices
-    x, y, z = vertices.T
-
-    # Get vertex colors if they exist
-    if hasattr(mesh.visual, "vertex_colors"):
-        # Convert RGBA to hex colors for Plotly
-        colors = [
-            "#{:02x}{:02x}{:02x}".format(r, g, b)
-            for r, g, b, _ in mesh.visual.vertex_colors
-        ]
-    else:
-        # Default color if no vertex colors available
-        colors = "rgb(100, 100, 100)"
-
-    fig = go.Figure(
-        data=[
-            go.Scatter3d(
-                x=x,
-                y=y,
-                z=z,
-                mode="markers",
-                marker=dict(size=1),
-            )
-        ]
-    )
-
-    # Make the figure more compact for sidebar
-    fig.update_layout(
-        margin=dict(l=0, r=0, t=0, b=0),
-        scene_camera=dict(up=dict(x=0, y=0, z=1), center=dict(x=0, y=0, z=0)),
-        height=300,  # Smaller height for sidebar
-    )
-    return fig
 
 
 def main(recursed=False) -> None:
@@ -114,8 +61,7 @@ def main(recursed=False) -> None:
 
             st.subheader("3D Model")
             if "current_model" in st.session_state:
-                # fig = load_3d_model(st.session_state.current_model)
-                # st.plotly_chart(fig, use_container_width=True)
+                time.sleep(5)
                 load_babylon_viewer(st.session_state.current_model)
     if recursed:
         return
