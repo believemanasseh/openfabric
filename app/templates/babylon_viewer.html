@@ -24,15 +24,24 @@
             const camera = new BABYLON.ArcRotateCamera("camera", 0, Math.PI / 3, 10, BABYLON.Vector3.Zero(), scene);
             camera.attachControl(canvas, true);
             const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), scene);
-            
-            // Load the GLB model
-            const result = await BABYLON.SceneLoader.ImportMeshAsync("", "https://forge-projects.s3.amazonaws.com/projects/", "model.glb", scene);
-            
-            // Scale up the model 
-            const modelScale = 5.0;
-            result.meshes[0].scaling = new BABYLON.Vector3(modelScale, modelScale, modelScale);
+           
+            try {
+                // Load the GLB model
+                const result = await BABYLON.SceneLoader.ImportMeshAsync("", 
+                    "https://forge-projects.s3.amazonaws.com/projects/", 
+                    "model.glb", 
+                    scene
+                );
+                
+                // Scale up the model
+                const modelScale = 5.0;
+                result.meshes[0].scaling = new BABYLON.Vector3(modelScale, modelScale, modelScale);
+            } catch (error) {
+                console.error("Error loading model:", error);
+            }
 
             return scene;
+           
         }
 
         createScene().then((scene) => {

@@ -12,16 +12,17 @@ st.set_page_config(
 )
 
 
-def load_babylon_viewer(model_path: str) -> None:
+def load_babylon_viewer() -> None:
     """
     Create a Babylon.js viewer component for the 3D model
-
-    Args:
-        model_path (str): Path to the GLB file to be loaded.
     """
     # Read the HTML template
     with open("./templates/babylon_viewer.html", "r") as file:
         html_content = file.read()
+
+    # Add timestamp to force reload of model
+    timestamp = int(time.time())
+    html_content = html_content.replace('model.glb"', f'model.glb?t={timestamp}"')
 
     # Use st.components.html to embed the viewer
     html(html_content, height=300)
@@ -62,7 +63,8 @@ def main(recursed=False) -> None:
             st.subheader("3D Model")
             if "current_model" in st.session_state:
                 time.sleep(5)
-                load_babylon_viewer(st.session_state.current_model)
+                load_babylon_viewer()
+
     if recursed:
         return
 
