@@ -57,7 +57,7 @@ Reference previous creations:
 
 ## Dependencies 📦
 
-- Python 3.11+
+- Python 3.8+
 - Openfabric SDK
 - Local LLM (DeepSeek)
 - SQLite (for persistent storage)
