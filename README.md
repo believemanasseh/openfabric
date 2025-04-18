@@ -5,7 +5,7 @@ An intelligent pipeline that transforms text prompts into 3D models using local 
 ## Features 🚀
 
 - Text-to-Image-to-3D pipeline
-- Local LLM (Mistral) integration
+- Local LLM (Deepseek) integration
 - Smart memory system for context retention
 - Dynamic request handling with Openfabric SDK
 
@@ -80,9 +80,7 @@ poetry install
 
 Configure the LLM:
 
-```bash
-# Follow LLM-specific setup instructions
-```
+Ensure Ollama server is running at port 11434 and the deepseek-r1:1.5b model has been downloaded.
 
 Run the server:
 
